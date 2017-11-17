@@ -1,2 +1,2 @@
 # allauth_loginreg
-Django-allauth Login and Registration. <em>In Progress...</em>
+Django-allauth Login and Registration. <strong>In Progress...</strong>
