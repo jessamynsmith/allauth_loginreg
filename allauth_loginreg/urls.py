@@ -21,5 +21,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^accounts/', include('django.contrib.auth.urls')),
-    url(r'^$', RedirectView.as_view(url='accounts/login/', permanent=False)),
+    #url(r'^$', RedirectView.as_view(url='accounts/login/', permanent=False)),
+    url(r'^', include('apps.good_times.urls'))
 ]

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+  {% load socialaccount %}
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{% static 'img/favicon.ico' %}">
+
+  
+  <title>{% block title %}{% endblock %}</title>
+
+  {% block extra_head %}{% endblock %}
+
+  <style>
+  body {
+  background: #222;
+}
+
+svg {
+  width: 100vw;
+  height: 100vh;
+  margin-top: -4vh;
+}
+
+//svg style from illustrator export
+.cls-21, .cls-22 { fill: none; } .cls-2 { clip-path: url(#clip-path); } .cls-3 { fill: #58595b; } .cls-4 { fill: #ababab; } .cls-5 { fill: #757578; } .cls-6 { fill: #96979a; } .cls-7 { fill: #2c3d86; } .cls-8 { fill: #b62a2e; } .cls-9 { fill: #1a2248; } .cls-10 { fill: #931d21; } .cls-11 { fill: #8a232f; } .cls-12 { fill: #66172a; } .cls-13 { fill: #7b1a22; } .cls-14 { fill: #2b2424; } .cls-15 { fill: #105287; } .cls-16 { fill: #443f65; } .cls-17 { fill: #c0272b; stroke: #c0272b; stroke-width: 3px; } .cls-17, .cls-21, .cls-22 { stroke-miterlimit: 10; } .cls-18 { fill: #9f232d; } .cls-19 { fill: #650818; } .cls-20 { fill: #dad9d9; stroke: #231f20; stroke-linecap: round; stroke-linejoin: round; stroke-width: 6px; } .cls-21 { stroke: #443f65; stroke-width: 2px; } .cls-22 { stroke: #6d6e71; } .cls-23 { fill: #321116; opacity: 0.36; } .cls-24 { fill: #231f20; opacity: 0.45; }
+
+#hidden, .octocat, .ending {
+  visibility: hidden;
+}
+
+#rope-hide {
+  opacity: 0;
+}
+
+.thatsall {
+  .filtered { filter: url(#AI_Shadow_1); } 
+  .type { fill: #ed1c24; stroke: #e4ac24; stroke-miterlimit: 10; }
+}
+
+.ending {
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  svg {
+    width: 40vw;
+    margin-left: 30vw;
+    height: 100vh;
+  }
+}
+
+//so many styles for buttons
+button, button:visited, button:active {
+  background: #111;
+  color: #888;
+  border: none;
+  font-family: 'Lato';
+  font-style: italic;
+  font-weight: normal;
+  position: absolute;
+  top: 70vh;
+  left: 50%;
+  margin-left: -70px;
+  padding: 10px 16px 10px;
+  letter-spacing: 0.03em;
+  border-radius: 5px;
+  margin-right: 10px;
+  font-size: 15px;
+  font-weight: 400;
+  text-align: center;
+  text-decoration: none;
+  border-bottom: 1px solid #000;
+  outline: 0;
+  cursor: pointer;
+  -webkit-transition: none;
+  transition: all 0.5s ease;
+  &:hover {
+    background: darken(#555, 8%);
+  }
+}
+
+.spin {
+  display: inline-block;
+}</style>
+</head>
+<body>
+
+<nav class="navbar navbar-default navbar-fixed-top my-navbar">
+  {% if not user.is_anonymous %}
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="{% url 'account_logout' %}">
+        <span class="glyphicon-lg glyphicon glyphicon-log-out"></span>
+      </a></li>
+    </ul>
+  {% endif %}
+
+  <div class="navbar-header">
+    <a class="brand" href="{% url 'account_signup' %}">
+      <img src="{% static 'img/logo.png' %}" alt="logo">
+      <span>Logo</span><br>
+      <span class="small">Statement</span>
+    </a>
+  </div>
+</nav>
+
+<div class="content">
+  {% block content %}{% endblock %}
+</div>
+
+{% block footer %}
+  <div class="footer">
+    <div class="center">
+
+        <span class="mobile_hidden">
+          <a target="_blank" href="https://github.com/AleeWeb/allauth_loginreg">View Github code here.</a> 
+        </span>
+   
+
+      <div class="grey">Version {{ VERSION }}, Deployed
+        {{ DEPLOY_DATE|date:"M d, Y, H:i:s e" }}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+  <script type="text/javascript" src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'jquery-ui/jquery-ui.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js-cookie/src/js.cookie.js' %}"></script>
+  <script type="text/javascript" src="{% static 'jquery.serializeJSON/jquery.serializejson.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'bootstrap3-dialog/dist/js/bootstrap-dialog.min.js' %}"></script>
+
+  <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
+
+{% block extra_js %}{% endblock %}
+
+<script>
+  //we hide the octocat in CSS and show it in JS so there are no momentary flashes of visibility before the animation starts
+TweenMax.set(".octocat", {
+  visibility: "visible"
+});
+
+function sceneOne() {
+  var tl = new TimelineMax();
+  
+  tl.add("begin");
+	tl.from(".spidey", 2, {y:-700, ease:Elastic.easeInOut}, "begin");
+  tl.to(".top-stretch", 1.4, {scaleY:3, y:-100, ease:Power3.easeOut}, "begin");
+  tl.to(".top-stretch", 0.2, {scaleY:1, y:0, ease:Power3.easeIn}, "begin+=1.4");
+  tl.from("#shadow", 2, {scale:0, transformOrigin: "50% 50%", opacity:0, ease:Elastic.easeInOut}, "begin");
+  //whiskers are repetitive
+  function whiskeys(start, end) {
+    tl.to(start, 0.25, {morphSVG: {shape: end}, ease:Sine.easeOut}, "begin+=0.75");
+    tl.to(start, 0.75, {morphSVG: {shape: start}, ease:Bounce.easeIn}, "begin+=1");
+  }
+  whiskeys("#wr-d-1", "#wr-u-2");
+  whiskeys("#wr-d-2", "#wr-u-1");
+  whiskeys("#wl-d-1", "#wl-u-1");
+  whiskeys("#wl-d-2", "#wl-u-2");
+  tl.to("#body", 0.75, {y: 15, ease:Bounce.easeOut}, "begin+=2");
+  tl.to("#shadow", 0.75, {scale: 1.1, fill: "hsl(0, +=10, -=10)", ease:Bounce.easeOut}, "begin+=2");
+  tl.to("#rope", 0.75, {morphSVG: {shape: "#rope2-top"}, y:-15, ease:Circ.easeOut}, "begin+=2");
+  tl.to("#rope-hide", 0.75, {opacity:1, y:-15, ease:Circ.easeOut}, "begin+=2");
+  tl.to("#body", 0.75, {y: 50, ease:Bounce.easeOut}, "begin+=3");
+  tl.to("#shadow", 0.75, {scale: 1.2, fill: "hsl(0, +=15, -=15)", ease:Bounce.easeOut}, "begin+=3");
+  tl.to("#eye-r", 0.05, {morphSVG: {shape: "#eyedown-r"}, ease:Circ.easeOut}, "begin+=3");
+  tl.to("#eye-l", 0.05, {morphSVG: {shape: "#eyedown-l"}, ease:Circ.easeOut}, "begin+=3");
+  tl.to("#rope", 0.75, {y:-55, ease:Circ.easeOut}, "begin+=3");
+  tl.to("#thread", 0.75, {y:-29, scaleY:3, ease:Circ.easeOut}, "begin+=3");
+  tl.to("#unravel", 0.5, {opacity:0, ease:Circ.easeOut}, "begin+=3");
+
+  return tl;
+}
+
+function sceneTwo() {
+  var tl = new TimelineMax(),
+      //eases and timing were repetitive
+      easeC = Elastic.easeOut,
+      time = 0.6;
+  
+  tl.add("start");
+	tl.to("#body", time, {y:100, ease:easeC}, "start");
+  tl.to("#shadow", time, {scaleX:2, y:-40, fill: "hsl(0, +=50, -=50)", ease:easeC}, "start");
+  tl.to("#r-leg3", time, {x:330, y:250, rotation:90, ease:easeC}, "start");
+  tl.to("#tail", time, {x:50, y:220, rotation:-30, ease:easeC}, "start");
+  tl.to("#l-leg4", time, {x:-180, y:440, rotation:-90, ease:easeC}, "start");
+  tl.to("#torso", time, {y:200, ease:easeC}, "start");
+  tl.to(".torso-hide", time, {y:200, ease:easeC}, "start");
+  tl.to("#rope-hide", time, {y:400, ease:easeC}, "start");
+  tl.to("#r-leg1", time, {x:350, y:400, rotation:110, ease:easeC}, "start");
+  tl.to("#l-leg2", time, {x:-180, y:440, rotation:-90, ease:easeC}, "start");
+  tl.to("#rope-fall", time, {x:30, y:410, rotation:-20, ease:easeC}, "start");
+  tl.to("#eye-r", 0.05, {scaleY:0, transformOrigin:"50% 50%", yoyo:true, repeat:3, repeatDelay:0.05, ease:Power3.easeOut}, "start+=1.5");
+  tl.to("#eye-l", 0.05, {scaleY:0, transformOrigin:"50% 50%", yoyo:true, repeat:3, repeatDelay:0.05, ease:Power3.easeOut}, "start+=1.5");
+  tl.to(".circ-away", 1, {scale:0, transformOrigin:"50% 50%", ease:Circ.easeIn}, "start+=2.5");
+
+  return tl;
+}
+
+function sceneThree() {
+  var tl = new TimelineMax();
+  
+  // bededebedede that's all folks!
+  tl.add("end");
+	tl.to(".ending", 1, {autoAlpha:1, ease:Circ.easeOut}, "end");
+  tl.from(".thatsall", 1, {x:-700, scale:0, ease:Back.easeOut}, "end+=0.1");
+  tl.from(".spin", 0.5, {rotation:360, ease:Back.easeOut}, "end+=1.3");
+
+  return tl;
+}
+
+//add it all to master timeline
+var master = new TimelineMax();
+master.add(sceneOne(), "first");
+master.add(sceneTwo(), "second");
+master.add(sceneThree(), "third");
+
+//slow it down a smidge for comedy
+master.timeScale(0.8);
+
+function startAgain() {
+  //reset the progress to zero and fire it up again
+  master.progress(0);
+  //if I didn't reset the progress, I could still do a restart, but I would have had to have some fromTo tweens in there
+  master.restart();
+}
+
+//you know, nodeLists and all.
+var replay = document.querySelectorAll(".replay")[0];
+replay.addEventListener("click", startAgain, false);
+</script>
+</body>
+</html>
